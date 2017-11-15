@@ -9,7 +9,9 @@ public class SelectMenuManager : MonoBehaviour
     {
         head,
         hand,
-        foot
+        foot,
+        upperbody,
+        lowerbody
     }
 
     [SerializeField]
@@ -19,17 +21,32 @@ public class SelectMenuManager : MonoBehaviour
     [SerializeField]
     private SkinnedMeshRenderer footRenderer;
     [SerializeField]
+    private SkinnedMeshRenderer upperbodyRenderer;
+    [SerializeField]
+    private SkinnedMeshRenderer lowerbodyRenderer;
+    [SerializeField]
     private Mesh[] headMeshArray;
     [SerializeField]
     private Mesh[] handMeshArray;
     [SerializeField]
     private Mesh[] footMeshArray;
+    [SerializeField]
+    private Mesh[] upperbodyMeshArray;
+    [SerializeField]
+    private Mesh[] lowerbodyMeshArray;
 
     private int headMeshIndex = 0;
     private int handMeshIndex = 0;
     private int footMeshIndex = 0;
+    private int upperbodyMeshIndex = 0;
+    private int lowerbodyMeshIndex = 0;
 
     private void Awake()
+    {
+        InitFind();
+    }
+
+    void InitFind()
     {
         var uiroot = GameObject.Find(SelectMenuName.uiRooot).transform;
         uiroot.Find(SelectMenuName.headUp).GetComponent<Button>()
@@ -44,6 +61,14 @@ public class SelectMenuManager : MonoBehaviour
             .onClick.AddListener(() => { ChangeBody(ChangeBodyType.foot, true); });
         uiroot.Find(SelectMenuName.footDown).GetComponent<Button>()
             .onClick.AddListener(() => { ChangeBody(ChangeBodyType.foot, false); });
+        uiroot.Find(SelectMenuName.upperbodyUp).GetComponent<Button>()
+            .onClick.AddListener(() => { ChangeBody(ChangeBodyType.upperbody, true); });
+        uiroot.Find(SelectMenuName.upperbodyDown).GetComponent<Button>()
+            .onClick.AddListener(() => { ChangeBody(ChangeBodyType.upperbody, false); });
+        uiroot.Find(SelectMenuName.lowerbodyUp).GetComponent<Button>()
+            .onClick.AddListener(() => { ChangeBody(ChangeBodyType.lowerbody, true); });
+        uiroot.Find(SelectMenuName.lowerbodyDown).GetComponent<Button>()
+            .onClick.AddListener(() => { ChangeBody(ChangeBodyType.lowerbody, false); });
         uiroot.Find(SelectMenuName.blueButton).GetComponent<Button>()
             .onClick.AddListener(() => { ChangeColor(Color.blue); });
         uiroot.Find(SelectMenuName.cyanButton).GetComponent<Button>()
@@ -51,9 +76,11 @@ public class SelectMenuManager : MonoBehaviour
         uiroot.Find(SelectMenuName.greenButton).GetComponent<Button>()
             .onClick.AddListener(() => { ChangeColor(Color.green); });
         uiroot.Find(SelectMenuName.purpleButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.yellow); });
+            .onClick.AddListener(() => { ChangeColor(new Color(0.627451f, 0.12549f, 0.941176f)); });
         uiroot.Find(SelectMenuName.redButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(new Color(160, 32, 240)); });
+            .onClick.AddListener(() => { ChangeColor(Color.red); });
+        uiroot.Find(SelectMenuName.whiteButton).GetComponent<Button>()
+            .onClick.AddListener(() => { ChangeColor(Color.white); });
     }
 
 
@@ -79,6 +106,16 @@ public class SelectMenuManager : MonoBehaviour
                 meshArray = footMeshArray;
                 index = footMeshIndex;
                 break;
+            case ChangeBodyType.upperbody:
+                smr = upperbodyRenderer;
+                meshArray = upperbodyMeshArray;
+                index = upperbodyMeshIndex;
+                break;
+            case ChangeBodyType.lowerbody:
+                smr = lowerbodyRenderer;
+                meshArray = lowerbodyMeshArray;
+                index = lowerbodyMeshIndex;
+                break;
             default:
                 return;
         }
@@ -99,6 +136,14 @@ public class SelectMenuManager : MonoBehaviour
             case ChangeBodyType.foot:
                 footMeshIndex = index;
                 break;
+            case ChangeBodyType.upperbody:
+                upperbodyMeshIndex = index;
+                break;
+            case ChangeBodyType.lowerbody:
+                smr = lowerbodyRenderer;
+                meshArray = lowerbodyMeshArray;
+                lowerbodyMeshIndex = index;
+                break;
             default:
                 return;
         }
@@ -107,6 +152,10 @@ public class SelectMenuManager : MonoBehaviour
 
     private void ChangeColor(Color col)
     {
-
+        headRenderer.material.SetColor("_Color", col);
+        handRenderer.material.SetColor("_Color", col);
+        footRenderer.material.SetColor("_Color", col);
+        upperbodyRenderer.material.SetColor("_Color", col);
+        lowerbodyRenderer.material.SetColor("_Color", col);
     }
 }

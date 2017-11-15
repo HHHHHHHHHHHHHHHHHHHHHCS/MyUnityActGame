@@ -8,6 +8,10 @@
     public const string handDown = "HandPanel/Down";
     public const string footUp = "FootPanel/Up";
     public const string footDown = "FootPanel/Down";
+    public const string upperbodyUp = "UpperbodyPanel/Up";
+    public const string upperbodyDown = "UpperbodyPanel/Down";
+    public const string lowerbodyUp = "LowerbodyPanel/Up";
+    public const string lowerbodyDown = "LowerbodyPanel/Down";
 
     public const string colorPanel = "ColorPanel";
     public const string blueButton = colorPanel + "/Blue";
@@ -15,4 +19,5 @@
     public const string greenButton = colorPanel + "/Green";
     public const string purpleButton = colorPanel + "/Purple";
     public const string redButton = colorPanel + "/Red";
+    public const string whiteButton = colorPanel + "/White";
 }
