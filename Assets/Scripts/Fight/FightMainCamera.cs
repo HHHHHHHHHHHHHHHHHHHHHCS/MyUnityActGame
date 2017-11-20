@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FightMainCamera : MonoBehaviour
 {
-    private Vector3 offestPos = new Vector3(4, 3.5f, 0);
+    private Vector3 offestPos = new Vector3(0, 3.5f, -4);
     private float speed = 2;
 
     private Transform player;
