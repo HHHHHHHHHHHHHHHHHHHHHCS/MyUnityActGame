@@ -20,4 +20,6 @@
     public const string purpleButton = colorPanel + "/Purple";
     public const string redButton = colorPanel + "/Red";
     public const string whiteButton = colorPanel + "/White";
+
+    public const string playButton = "PlayButton";
 }

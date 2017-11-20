@@ -54,6 +54,8 @@ MonoBehaviour:
   headRenderer: {fileID: 0}
   handRenderer: {fileID: 0}
   footRenderer: {fileID: 0}
+  upperbodyRenderer: {fileID: 0}
+  lowerbodyRenderer: {fileID: 0}
   headMeshArray:
   - {fileID: 4300004, guid: 407e6c262b6426f4cb0e2c5f8f72fca6, type: 3}
   - {fileID: 4300004, guid: 0c5667fd59519a641b836b300d79f04b, type: 3}
@@ -66,3 +68,5 @@ MonoBehaviour:
   - {fileID: 4300004, guid: b988171583f26484b8b56a7e09c4e201, type: 3}
   - {fileID: 4300004, guid: ed4a1c8d29b4ad241aefd63d3a8dac86, type: 3}
   - {fileID: 4300004, guid: 4c8b6537c70895d44a932d6dff549284, type: 3}
+  upperbodyMeshArray: []
+  lowerbodyMeshArray: []

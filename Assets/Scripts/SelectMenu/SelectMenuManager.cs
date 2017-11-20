@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PlayerModelBase;
 
 public class SelectMenuManager : MonoBehaviour
 {
-    private enum ChangeBodyType
-    {
-        head,
-        hand,
-        foot,
-        upperbody,
-        lowerbody
-    }
+
 
     [SerializeField]
     private SkinnedMeshRenderer headRenderer;
@@ -35,15 +29,15 @@ public class SelectMenuManager : MonoBehaviour
     [SerializeField]
     private Mesh[] lowerbodyMeshArray;
 
-    private int headMeshIndex = 0;
-    private int handMeshIndex = 0;
-    private int footMeshIndex = 0;
-    private int upperbodyMeshIndex = 0;
-    private int lowerbodyMeshIndex = 0;
+    private PlayerModel playerModelInfo = new PlayerModel();
+
+
+    private readonly Color purple = new Color(0.627451f, 0.12549f, 0.941176f);
 
     private void Awake()
     {
         InitFind();
+        InitPlayerModel();
     }
 
     void InitFind()
@@ -70,21 +64,51 @@ public class SelectMenuManager : MonoBehaviour
         uiroot.Find(SelectMenuName.lowerbodyDown).GetComponent<Button>()
             .onClick.AddListener(() => { ChangeBody(ChangeBodyType.lowerbody, false); });
         uiroot.Find(SelectMenuName.blueButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.blue); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.Blue); });
         uiroot.Find(SelectMenuName.cyanButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.cyan); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.Cyan); });
         uiroot.Find(SelectMenuName.greenButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.green); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.Green); });
         uiroot.Find(SelectMenuName.purpleButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(new Color(0.627451f, 0.12549f, 0.941176f)); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.Purple); });
         uiroot.Find(SelectMenuName.redButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.red); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.Red); });
         uiroot.Find(SelectMenuName.whiteButton).GetComponent<Button>()
-            .onClick.AddListener(() => { ChangeColor(Color.white); });
+            .onClick.AddListener(() => { ChangeColor(PlayerColor.White); });
+        uiroot.Find(SelectMenuName.playButton).GetComponent<Button>()
+    .onClick.AddListener(SavePlayerInfo);
+
+    }
+
+    void InitPlayerModel()
+    {
+        var saveData = PlayerModelFileManager.LoadPlayer();
+        if (saveData != null)
+        {
+            ChangeBody(saveData);
+        }
+    }
+
+    void SavePlayerInfo()
+    {
+        PlayerModelFileManager.SavePlayer(playerModelInfo);
+    }
+
+    public void ChangeBody(PlayerModel playerModel)
+    {
+        if (playerModel != null)
+        {
+            ChangeColor(playerModel.playerColor);
+            ChangeBody(ChangeBodyType.head, false, playerModel.headModel);
+            ChangeBody(ChangeBodyType.hand, false, playerModel.handModel);
+            ChangeBody(ChangeBodyType.foot, false, playerModel.footModel);
+            ChangeBody(ChangeBodyType.upperbody, false, playerModel.upperbodyModel);
+            ChangeBody(ChangeBodyType.lowerbody, false, playerModel.lowerbodyModel);
+        }
     }
 
 
-    private void ChangeBody(ChangeBodyType body, bool isUp)
+    private void ChangeBody(ChangeBodyType body, bool isUp, int _index = -1)
     {
         SkinnedMeshRenderer smr;
         Mesh[] meshArray;
@@ -94,55 +118,60 @@ public class SelectMenuManager : MonoBehaviour
             case ChangeBodyType.head:
                 smr = headRenderer;
                 meshArray = headMeshArray;
-                index = headMeshIndex;
+                index = playerModelInfo.headModel;
                 break;
             case ChangeBodyType.hand:
                 smr = handRenderer;
                 meshArray = handMeshArray;
-                index = handMeshIndex;
+                index = playerModelInfo.handModel;
                 break;
             case ChangeBodyType.foot:
                 smr = footRenderer;
                 meshArray = footMeshArray;
-                index = footMeshIndex;
+                index = playerModelInfo.footModel;
                 break;
             case ChangeBodyType.upperbody:
                 smr = upperbodyRenderer;
                 meshArray = upperbodyMeshArray;
-                index = upperbodyMeshIndex;
+                index = playerModelInfo.upperbodyModel;
                 break;
             case ChangeBodyType.lowerbody:
                 smr = lowerbodyRenderer;
                 meshArray = lowerbodyMeshArray;
-                index = lowerbodyMeshIndex;
+                index = playerModelInfo.lowerbodyModel;
                 break;
             default:
                 return;
         }
-        if (isUp && index == 0)
+        if (_index == -1)
         {
-            index = meshArray.Length;
+            if (isUp && index == 0)
+            {
+                index = meshArray.Length;
+            }
+            index = (isUp ? --index : ++index) % meshArray.Length;
         }
-        index = (isUp ? --index : ++index) % meshArray.Length;
+        else
+        {
+            index = _index;
+        }
         smr.sharedMesh = meshArray[index];
         switch (body)
         {
             case ChangeBodyType.head:
-                headMeshIndex = index;
+                playerModelInfo.headModel = index;
                 break;
             case ChangeBodyType.hand:
-                handMeshIndex = index;
+                playerModelInfo.handModel = index;
                 break;
             case ChangeBodyType.foot:
-                footMeshIndex = index;
+                playerModelInfo.footModel = index;
                 break;
             case ChangeBodyType.upperbody:
-                upperbodyMeshIndex = index;
+                playerModelInfo.upperbodyModel = index;
                 break;
             case ChangeBodyType.lowerbody:
-                smr = lowerbodyRenderer;
-                meshArray = lowerbodyMeshArray;
-                lowerbodyMeshIndex = index;
+                playerModelInfo.lowerbodyModel = index;
                 break;
             default:
                 return;
@@ -150,8 +179,35 @@ public class SelectMenuManager : MonoBehaviour
 
     }
 
-    private void ChangeColor(Color col)
+    private void ChangeColor(PlayerColor playerColor)
     {
+        Color col;
+        playerModelInfo.playerColor = playerColor;
+        switch (playerColor)
+        {
+            case PlayerColor.Blue:
+                col = Color.blue;
+                break;
+            case PlayerColor.Cyan:
+                col = Color.cyan;
+                break;
+            case PlayerColor.Green:
+                col = Color.green;
+                break;
+            case PlayerColor.Purple:
+                col = purple;
+                break;
+            case PlayerColor.Red:
+                col = Color.red;
+                break;
+            case PlayerColor.White:
+                col = Color.white;
+                break;
+            default:
+                col = Color.white;
+                break;
+        }
+
         headRenderer.material.SetColor("_Color", col);
         handRenderer.material.SetColor("_Color", col);
         footRenderer.material.SetColor("_Color", col);
