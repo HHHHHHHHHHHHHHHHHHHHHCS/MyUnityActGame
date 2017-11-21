@@ -116,12 +116,18 @@ public class FightPlayer : MonoBehaviour
 
     public void PlayNormalAttackButton()
     {
+
         if(isAttackStart)
         {
-            isClickAttackB = true;
+            if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerAttackA")
+            {
+                isClickAttackB = true;
+            }
         }
         else
         {
+            isClickAttackB = false;
+            isAttackStart = false;
             anim.SetTrigger("attackA");
         }
 
@@ -129,7 +135,7 @@ public class FightPlayer : MonoBehaviour
 
     public void PlayRangeAttackButton()
     {
-        Debug.Log("PlayRangelAttackButton");
+        anim.SetTrigger("rangeAttack");
     }
 
     public void AttackTakeDamage_A()
