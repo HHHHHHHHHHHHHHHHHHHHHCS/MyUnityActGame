@@ -9,10 +9,15 @@ public class FightGameManager : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindWithTag(Tags.player).GetComponent<FightPlayer>();
-        var joystick = GameObject.Find(FightName.joystick).GetComponent<JoystickEvent>();
-        joystick.beginControl.AddListener(player.JoystickBeginEvent);
-        joystick.controlling.AddListener(player.JoystickDragEvent);
-        joystick.endControl.AddListener(player.JoystickEndEvent);
+        InitFightUI();
+    }
+
+    void InitFightUI()
+    {
+        FightUIManager.Instance
+            .InitJoystick(player.JoystickBeginEvent, player.JoystickDragEvent, player.JoystickEndEvent)
+            .InitAttackButton(player.PlayNormalAttackButton, player.PlayRangeAttackButton);
+
     }
 
 
