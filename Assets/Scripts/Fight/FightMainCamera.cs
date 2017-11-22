@@ -11,7 +11,7 @@ public class FightMainCamera : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindWithTag(Tags.player).transform;
+        player =FightGameManager.Instance.Player.transform;
     }
 
     private void Update()

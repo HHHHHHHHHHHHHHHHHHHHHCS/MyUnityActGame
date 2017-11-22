@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class FightGameManager : MonoBehaviour
 {
-    FightPlayer player;
+    public static FightGameManager Instance
+    {
+        get;
+        private set;
+    }
+
+    public FightPlayer Player
+    {
+        get;
+        private set;
+    }
 
     private void Awake()
     {
-        player = GameObject.FindWithTag(Tags.player).GetComponent<FightPlayer>();
+        Instance = this;
+        Player = GameObject.FindWithTag(Tags.player).GetComponent<FightPlayer>();
         InitFightUI();
     }
 
     void InitFightUI()
     {
         FightUIManager.Instance
-            .InitJoystick(player.JoystickBeginEvent, player.JoystickDragEvent, player.JoystickEndEvent)
-            .InitAttackButton(player.PlayNormalAttackButton, player.PlayRangeAttackButton);
+            .InitJoystick(Player.JoystickBeginEvent, Player.JoystickDragEvent, Player.JoystickEndEvent)
+            .InitAttackButton(Player.PlayNormalAttackButton, Player.PlayRangeAttackButton);
 
     }
 
