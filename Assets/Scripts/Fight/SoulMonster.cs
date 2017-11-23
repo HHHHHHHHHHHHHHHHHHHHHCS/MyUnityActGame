@@ -6,7 +6,8 @@ public class SoulMonster : EnemyBase
 {
     protected override bool SimpleMove()
     {
-        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonStand01")
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonStand01"
+            || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonRun")
         {
             enemyCtrl.SimpleMove(transform.forward * moveSpeed);
             return true;
