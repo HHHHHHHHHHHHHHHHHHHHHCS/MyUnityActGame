@@ -45,6 +45,7 @@ public class EnemyBase : MonoBehaviour
             {
                 Attack();
                 attackTimer = attackTime;
+                isRun = false;
             }
         }
         else

@@ -16,10 +16,17 @@ public class FightGameManager : MonoBehaviour
         private set;
     }
 
+    public Transform EnemyManager
+    {
+        get;
+        private set;
+    }
+
     private void Awake()
     {
         Instance = this;
         Player = GameObject.FindWithTag(Tags.player).GetComponent<FightPlayer>();
+        EnemyManager = GameObject.Find("EnemyManager").transform;
         InitFightUI();
     }
 

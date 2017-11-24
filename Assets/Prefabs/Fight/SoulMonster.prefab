@@ -472,6 +472,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4529958750092778}
   - component: {fileID: 95626245156146456}
+  - component: {fileID: 143441108728832982}
+  - component: {fileID: 114543079906833764}
   m_Layer: 0
   m_Name: SoulMonster
   m_TagString: Untagged
@@ -2330,6 +2332,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114543079906833764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1452725777200868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104f0ede574586744adc81223dab91f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &137691866542852050
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -2428,3 +2441,20 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.08395477, y: 0.026310205, z: 0.000012546778}
     m_Extent: {x: 0.53717166, y: 0.1503541, z: 0.38580087}
   m_DirtyAABB: 0
+--- !u!143 &143441108728832982
+CharacterController:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1452725777200868}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.1
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.55, z: 0}

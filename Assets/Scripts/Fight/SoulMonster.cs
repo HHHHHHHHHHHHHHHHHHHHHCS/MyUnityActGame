@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SoulMonster : EnemyBase
 {
+    public SoulMonster()
+    {
+        attackDistance = 1f;
+    }
+
     protected override bool SimpleMove()
     {
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonStand01"
@@ -17,6 +22,6 @@ public class SoulMonster : EnemyBase
 
     protected override void Attack()
     {
-        anim.SetTrigger("attack1");
+        anim.SetTrigger("attack");
     }
 }
