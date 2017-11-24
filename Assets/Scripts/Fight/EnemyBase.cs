@@ -1,25 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour
+public class EnemyBase : MonoBehaviour,IUnitBaseEvent
 {
     protected Animator anim;
     protected CharacterController enemyCtrl;
     protected Transform player;
-    protected float attackDistance = 3;
-    protected float moveSpeed = 2.5f;
-    protected float attackTime = 2;
+    protected UnitInfoBase unitInfo = new UnitInfoBase();
 
     protected float sqr_attackDistance;
     protected float attackTimer;
+
+    public EnemyBase()
+    {
+        unitInfo.attackDistance = 1.5f;
+        unitInfo.attackTime = 1.5f;
+        unitInfo.moveSpeed = 2f;
+    }
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         enemyCtrl = GetComponent<CharacterController>();
         player = FightGameManager.Instance.Player.transform;
-        sqr_attackDistance = attackDistance * attackDistance;
+        sqr_attackDistance = unitInfo.attackDistance * unitInfo.attackDistance;
     }
 
     private void Update()
@@ -44,7 +50,7 @@ public class EnemyBase : MonoBehaviour
             if (attackTimer <= 0)
             {
                 Attack();
-                attackTimer = attackTime;
+                attackTimer = unitInfo.attackTime;
                 isRun = false;
             }
         }
@@ -71,7 +77,7 @@ public class EnemyBase : MonoBehaviour
 
     protected virtual bool SimpleMove()
     {
-        enemyCtrl.SimpleMove(transform.forward * moveSpeed);
+        enemyCtrl.SimpleMove(transform.forward * unitInfo.moveSpeed);
         return true;
     }
 
@@ -79,4 +85,24 @@ public class EnemyBase : MonoBehaviour
     {
         anim.SetTrigger("attack1");
     }
+
+    public virtual bool TakeDamage(float damage)
+    {
+        unitInfo.nowHp -= damage;
+        if (unitInfo.nowHp <= 0)
+        {
+            unitInfo.nowHp = 0;
+            Dead();
+            return true;
+        }
+        return false;
+    }
+
+
+    public virtual void Dead()
+    {
+        
+    }
+
+
 }

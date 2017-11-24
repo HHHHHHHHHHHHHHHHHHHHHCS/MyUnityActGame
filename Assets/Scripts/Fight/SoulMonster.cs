@@ -6,7 +6,7 @@ public class SoulMonster : EnemyBase
 {
     public SoulMonster()
     {
-        attackDistance = 1f;
+        unitInfo.attackDistance = 1f;
     }
 
     protected override bool SimpleMove()
@@ -14,7 +14,7 @@ public class SoulMonster : EnemyBase
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonStand01"
             || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "MonRun")
         {
-            enemyCtrl.SimpleMove(transform.forward * moveSpeed);
+            enemyCtrl.SimpleMove(transform.forward * unitInfo.moveSpeed);
             return true;
         }
         return false;
@@ -23,5 +23,15 @@ public class SoulMonster : EnemyBase
     protected override void Attack()
     {
         anim.SetTrigger("attack");
+    }
+
+    public override bool TakeDamage(float damage)
+    {
+        return base.TakeDamage(damage);
+    }
+
+    public override void Dead()
+    {
+
     }
 }

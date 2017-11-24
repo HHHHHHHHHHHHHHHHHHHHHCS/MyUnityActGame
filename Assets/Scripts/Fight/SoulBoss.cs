@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class SoulBoss : EnemyBase
 {
+    public SoulBoss()
+    {
+        unitInfo.attackDistance = 2.5f;
+    }
+
     protected override bool SimpleMove()
     {
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "BossStand01"
             || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "BossRun01")
         {
-            enemyCtrl.SimpleMove(transform.forward * moveSpeed);
+            enemyCtrl.SimpleMove(transform.forward * unitInfo.moveSpeed);
             return true;
         }
         return false;
@@ -26,5 +31,15 @@ public class SoulBoss : EnemyBase
         {
             anim.SetTrigger("attack2");
         }
+    }
+
+    public override bool TakeDamage(float damage)
+    {
+        return base.TakeDamage(damage);
+    }
+
+    public override void Dead()
+    {
+
     }
 }

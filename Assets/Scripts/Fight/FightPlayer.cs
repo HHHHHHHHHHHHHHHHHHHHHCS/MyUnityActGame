@@ -1,17 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FightPlayer : MonoBehaviour
+public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 {
     private CharacterController playerCtrl;
     private Animator anim;
-    private float moveSpeed = 4;
-    private bool isKeepDrag,isJoystickChange;
+    private UnitInfoBase playerInfo = new UnitInfoBase();
+    private bool isKeepDrag, isJoystickChange;
     private Vector3 lastJoystickPos;
     private bool isAttackStart, isClickAttackB;
 
+    public FightPlayer()
+    {
+        playerInfo.moveSpeed = 4;
+    }
 
     private void Awake()
     {
@@ -40,7 +45,7 @@ public class FightPlayer : MonoBehaviour
         {
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
-            if (h!=0||v!=0)
+            if (h != 0 || v != 0)
             {
                 PlayerMove(h, v);
             }
@@ -66,7 +71,7 @@ public class FightPlayer : MonoBehaviour
                 || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerRun")
             {
                 transform.LookAt(transform.position + targetDir);
-                playerCtrl.SimpleMove(targetDir * moveSpeed);
+                playerCtrl.SimpleMove(targetDir * playerInfo.moveSpeed);
                 anim.SetBool("isRun", true);
             }
         }
@@ -99,9 +104,9 @@ public class FightPlayer : MonoBehaviour
 
     public void AttackEnd()
     {
-        if(isClickAttackB)
+        if (isClickAttackB)
         {
-            if(anim.GetCurrentAnimatorClipInfo(0)[0].clip.name=="PlayerAttackA")
+            if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerAttackA")
             {
                 anim.SetTrigger("attackB");
             }
@@ -117,7 +122,7 @@ public class FightPlayer : MonoBehaviour
     public void PlayNormalAttackButton()
     {
 
-        if(isAttackStart)
+        if (isAttackStart)
         {
             if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerAttackA")
             {
@@ -140,7 +145,17 @@ public class FightPlayer : MonoBehaviour
 
     public void AttackTakeDamage_A()
     {
-        Debug.Log("AttackTakeDamage_A");
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, playerInfo.attackDistance, LayerMask.GetMask("Enemy"));
+        foreach (var target in enemyList)
+        {
+            Vector3 temVec = target.transform.position - transform.position;
+            Vector3 norVec = transform.rotation * Vector3.forward * 5;//此处*5只是为了画线更清楚,可以不要
+            float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
+            if (angle <= 30)
+            {
+                Debug.Log("在扇形范围内");
+            }
+        }
     }
 
     public void AttackTakeDamage_B()
@@ -148,4 +163,20 @@ public class FightPlayer : MonoBehaviour
         Debug.Log("AttackTakeDamage_B");
     }
     #endregion
+
+    public bool TakeDamage(float damage)
+    {
+        playerInfo.nowHp -= damage;
+        if (playerInfo.nowHp <= 0)
+        {
+            playerInfo.nowHp = 0;
+            Dead();
+            return true;
+        }
+        return false;
+    }
+
+    public void Dead()
+    {
+    }
 }

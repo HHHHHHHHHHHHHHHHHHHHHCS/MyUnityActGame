@@ -35,7 +35,6 @@ public class RespawnArea : MonoBehaviour
             respawnArray[nowIndex].endSpawn += NextSpawn;
             respawnArray[nowIndex].Spawn();
             nowIndex++;
-            Debug.Log(1);
         }
     }
 }
