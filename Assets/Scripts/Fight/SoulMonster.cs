@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class SoulMonster : EnemyBase
 {
+    protected static GameObject hitFX;
+
+
     public SoulMonster()
     {
+        unitInfo.nowHp = unitInfo.maxHp = 100;
         unitInfo.attackDistance = 1f;
     }
 
@@ -27,11 +31,35 @@ public class SoulMonster : EnemyBase
 
     public override bool TakeDamage(float damage)
     {
-        return base.TakeDamage(damage);
+        var tf = base.TakeDamage(damage);
+        if (tf)
+        {
+            ProduceHitEffect();
+        }
+        return tf;
     }
 
     public override void Dead()
     {
+        base.Dead();
+    }
 
+    protected virtual bool InitEffect(string effectName)
+    {
+        if (!hitFX)
+        {
+            hitFX = Resources.Load<GameObject>(effectName);
+            return true;
+        }
+        return false;
+    }
+
+    protected virtual void ProduceHitEffect()
+    {
+        InitEffect("Effects/HitMonster");
+        if (hitFX)
+        {
+            var effect = Instantiate(hitFX, transform);
+        }
     }
 }

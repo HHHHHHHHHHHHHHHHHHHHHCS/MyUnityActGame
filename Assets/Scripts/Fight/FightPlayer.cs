@@ -15,6 +15,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public FightPlayer()
     {
+        playerInfo.attackDistance = 1.5f;
         playerInfo.moveSpeed = 4;
     }
 
@@ -121,12 +122,15 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void PlayNormalAttackButton()
     {
-
         if (isAttackStart)
         {
             if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerAttackA")
             {
                 isClickAttackB = true;
+            }
+            else
+            {
+                isAttackStart = false;
             }
         }
         else
@@ -151,16 +155,26 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
             Vector3 temVec = target.transform.position - transform.position;
             Vector3 norVec = transform.rotation * Vector3.forward * 5;//此处*5只是为了画线更清楚,可以不要
             float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
-            if (angle <= 30)
+            if (angle <= 45)
             {
-                Debug.Log("在扇形范围内");
+                target.GetComponent<EnemyBase>().TakeDamage(playerInfo.attackDamage);
             }
         }
     }
 
     public void AttackTakeDamage_B()
     {
-        Debug.Log("AttackTakeDamage_B");
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, playerInfo.attackDistance, LayerMask.GetMask("Enemy"));
+        foreach (var target in enemyList)
+        {
+            Vector3 temVec = target.transform.position - transform.position;
+            Vector3 norVec = transform.rotation * Vector3.forward * 5;//此处*5只是为了画线更清楚,可以不要
+            float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
+            if (angle <= 45)
+            {
+                target.GetComponent<EnemyBase>().TakeDamage(playerInfo.attackDamage*1.25f);
+            }
+        }
     }
     #endregion
 

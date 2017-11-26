@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour,IUnitBaseEvent
+public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 {
     protected Animator anim;
     protected CharacterController enemyCtrl;
@@ -28,7 +28,7 @@ public class EnemyBase : MonoBehaviour,IUnitBaseEvent
         sqr_attackDistance = unitInfo.attackDistance * unitInfo.attackDistance;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         MoveAndAttack();
     }
@@ -36,32 +36,37 @@ public class EnemyBase : MonoBehaviour,IUnitBaseEvent
 
     protected virtual void MoveAndAttack()
     {
-        bool isRun = GetIsRun();
-        Vector3 targetPos = player.position;
-        targetPos.y = transform.position.y;
-        transform.LookAt(targetPos);
-        float sqrDistance = Vector3.SqrMagnitude(targetPos - transform.position);
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
-        }
-        if (sqr_attackDistance >= sqrDistance)
-        {
-            if (attackTimer <= 0)
-            {
-                Attack();
-                attackTimer = unitInfo.attackTime;
-                isRun = false;
-            }
-        }
-        else
-        {
-            isRun = SimpleMove() ? true : isRun;
-        }
 
-        if (GetIsRun() != isRun)
+        if (unitInfo.nowHp > 0)
         {
-            SetIsRun(isRun);
+
+            bool isRun = GetIsRun();
+            Vector3 targetPos = player.position;
+            targetPos.y = transform.position.y;
+            transform.LookAt(targetPos);
+            float sqrDistance = Vector3.SqrMagnitude(targetPos - transform.position);
+            if (attackTimer > 0)
+            {
+                attackTimer -= Time.deltaTime;
+            }
+            if (sqr_attackDistance >= sqrDistance)
+            {
+                if (attackTimer <= 0)
+                {
+                    Attack();
+                    attackTimer = unitInfo.attackTime;
+                    isRun = false;
+                }
+            }
+            else
+            {
+                isRun = SimpleMove() ? true : isRun;
+            }
+
+            if (GetIsRun() != isRun)
+            {
+                SetIsRun(isRun);
+            }
         }
     }
 
@@ -88,11 +93,14 @@ public class EnemyBase : MonoBehaviour,IUnitBaseEvent
 
     public virtual bool TakeDamage(float damage)
     {
-        unitInfo.nowHp -= damage;
-        if (unitInfo.nowHp <= 0)
+        if (unitInfo.nowHp > 0)
         {
-            unitInfo.nowHp = 0;
-            Dead();
+            unitInfo.nowHp -= damage;
+            if (unitInfo.nowHp <= 0)
+            {
+                unitInfo.nowHp = 0;
+                Dead();
+            }
             return true;
         }
         return false;
@@ -101,8 +109,19 @@ public class EnemyBase : MonoBehaviour,IUnitBaseEvent
 
     public virtual void Dead()
     {
-        
+        anim.SetTrigger("death");
+        StartCoroutine(DeadAnim());
     }
 
-
+    protected virtual IEnumerator DeadAnim()
+    {
+        yield return new WaitForSeconds(1.333f);
+        Vector3 offestY = Vector3.down * 0.1f;
+        var wait = new WaitForSeconds(0.05f);
+        for (int i = 0; i <= 20; i++)
+        {
+            transform.position += offestY;
+            yield return wait;
+        }
+    }
 }

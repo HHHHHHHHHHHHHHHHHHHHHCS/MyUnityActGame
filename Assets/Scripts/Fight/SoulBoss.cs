@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class SoulBoss : EnemyBase
 {
+    protected static GameObject hitFX;
+
     public SoulBoss()
     {
-        unitInfo.attackDistance = 2.5f;
+        unitInfo.nowHp = unitInfo.maxHp = 200;
+        unitInfo.attackDistance = 2f;
     }
 
     protected override bool SimpleMove()
@@ -35,11 +38,35 @@ public class SoulBoss : EnemyBase
 
     public override bool TakeDamage(float damage)
     {
-        return base.TakeDamage(damage);
+        var tf = base.TakeDamage(damage);
+        if(tf)
+        {
+            ProduceHitEffect();
+        }
+        return tf;
     }
 
     public override void Dead()
     {
+        base.Dead();
+    }
 
+    protected virtual bool InitEffect(string effectName)
+    {
+        if (!hitFX)
+        {
+            hitFX = Resources.Load<GameObject>(effectName);
+            return true;
+        }
+        return false;
+    }
+
+    protected virtual void ProduceHitEffect()
+    {
+        InitEffect("Effects/HitBoss");
+        if (hitFX)
+        {
+            var effect = Instantiate(hitFX, transform);
+        }
     }
 }
