@@ -8,6 +8,7 @@ public class SoulBoss : EnemyBase
 
     public SoulBoss()
     {
+        unitInfo.attackDamage = 15;
         unitInfo.nowHp = unitInfo.maxHp = 200;
         unitInfo.attackDistance = 2f;
     }
@@ -33,6 +34,40 @@ public class SoulBoss : EnemyBase
         else
         {
             anim.SetTrigger("attack2");
+        }
+    }
+
+
+    public void HitDamage1()
+    {
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, unitInfo.attackDistance, LayerMask.GetMask(Tags.player));
+        foreach (var target in enemyList)
+        {
+            Vector3 temVec = target.transform.position - transform.position;
+            Vector3 norVec = transform.rotation * Vector3.forward;//此处*5只是为了画线更清楚,可以不要
+            float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
+            if (angle <= 30)
+            {
+                target.GetComponent<FightPlayer>().TakeDamage(unitInfo.attackDamage);
+                break;
+            }
+        }
+    }
+
+
+    public void HitDamage2()
+    {
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, unitInfo.attackDistance, LayerMask.GetMask(Tags.player));
+        foreach (var target in enemyList)
+        {
+            Vector3 temVec = target.transform.position - transform.position;
+            Vector3 norVec = transform.rotation * Vector3.forward;//此处*5只是为了画线更清楚,可以不要
+            float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
+            if (angle <= 30)
+            {
+                target.GetComponent<FightPlayer>().TakeDamage(unitInfo.attackDamage*1.5f);
+                break;
+            }
         }
     }
 

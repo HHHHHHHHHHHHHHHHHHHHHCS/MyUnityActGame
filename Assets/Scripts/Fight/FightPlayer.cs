@@ -15,6 +15,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public FightPlayer()
     {
+        playerInfo.nowHp = playerInfo.maxHp = 200f;
         playerInfo.attackDistance = 1.5f;
         playerInfo.moveSpeed = 4;
     }
@@ -148,11 +149,11 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void AttackTakeDamage_A()
     {
-        Collider[] enemyList = Physics.OverlapSphere(transform.position, playerInfo.attackDistance, LayerMask.GetMask("Enemy"));
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, playerInfo.attackDistance, LayerMask.GetMask(Tags.enemy));
         foreach (var target in enemyList)
         {
             Vector3 temVec = target.transform.position - transform.position;
-            Vector3 norVec = transform.rotation * Vector3.forward * 5;//此处*5只是为了画线更清楚,可以不要
+            Vector3 norVec = transform.rotation * Vector3.forward ;//此处*5只是为了画线更清楚,可以不要
             float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
             if (angle <= 45)
             {
@@ -213,5 +214,6 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void Dead()
     {
+        Debug.Log("I AM DEAD");
     }
 }

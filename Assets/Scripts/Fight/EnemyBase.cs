@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 {
+    protected static GameObject gunItem, dualSwordItem;
     protected Animator anim;
     protected CharacterController enemyCtrl;
     protected Transform player;
@@ -109,6 +110,27 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 
     public virtual void Dead()
     {
+        if(!gunItem)
+        {
+            gunItem = Resources.Load<GameObject>("Prefabs/GunItem");
+        }
+        if (!dualSwordItem)
+        {
+            dualSwordItem = Resources.Load<GameObject>("Prefabs/DualSwordItem");
+        }
+
+        float rd = UnityEngine.Random.Range(0,1f);
+        if(rd<0.33f)
+        {
+            Instantiate(gunItem,transform.position
+                ,Quaternion.identity);
+        }
+        else if(rd <0.66f)
+        {
+            Instantiate(dualSwordItem, transform.position
+                ,Quaternion.identity);
+        }
+
         anim.SetTrigger("death");
         StartCoroutine(DeadAnim());
     }

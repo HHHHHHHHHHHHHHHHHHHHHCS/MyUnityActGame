@@ -9,6 +9,7 @@ public class SoulMonster : EnemyBase
 
     public SoulMonster()
     {
+        unitInfo.attackDamage = 10;
         unitInfo.nowHp = unitInfo.maxHp = 100;
         unitInfo.attackDistance = 1f;
     }
@@ -37,6 +38,22 @@ public class SoulMonster : EnemyBase
             ProduceHitEffect();
         }
         return tf;
+    }
+
+    public void HitDamage1()
+    {
+        Collider[] enemyList = Physics.OverlapSphere(transform.position, unitInfo.attackDistance, LayerMask.GetMask(Tags.player));
+        foreach (var target in enemyList)
+        {
+            Vector3 temVec = target.transform.position - transform.position;
+            Vector3 norVec = transform.rotation * Vector3.forward;//此处*5只是为了画线更清楚,可以不要
+            float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
+            if (angle <= 30)
+            {
+                target.GetComponent<FightPlayer>().TakeDamage(unitInfo.attackDamage);
+                break;
+            }
+        }
     }
 
     public override void Dead()
