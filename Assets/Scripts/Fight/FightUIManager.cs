@@ -22,7 +22,7 @@ public class FightUIManager : MonoBehaviour
     }
 
     private JoystickEvent joystick;
-    private Button normalAttack, rangeAttack;
+    private Button normalAttack, rangeAttack,gunAttack;
 
     public FightUIManager _InitFightUI()
     {
@@ -32,6 +32,7 @@ public class FightUIManager : MonoBehaviour
             joystick = uiRoot.Find(FightName.joystick).GetComponent<JoystickEvent>();
             normalAttack = uiRoot.Find(FightName.normalAttack).GetComponent<Button>();
             rangeAttack = uiRoot.Find(FightName.rangeAttack).GetComponent<Button>();
+            gunAttack = uiRoot.Find(FightName.gunAttack).GetComponent<Button>();
         }
         return this;
     }
@@ -49,5 +50,15 @@ public class FightUIManager : MonoBehaviour
         normalAttack.onClick.AddListener(normalEvent);
         rangeAttack.onClick.AddListener(rangeEvent);
         return this;
+    }
+
+    public void SetRangeAttack(bool tf)
+    {
+        rangeAttack.interactable = tf;
+    }
+
+    public void SetGunAttack(bool tf)
+    {
+        gunAttack.interactable = tf;
     }
 }

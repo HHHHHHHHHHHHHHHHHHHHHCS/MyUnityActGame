@@ -6,30 +6,57 @@ using UnityEngine.EventSystems;
 
 public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 {
+    private WeaponBase weaponSingleSword, weaponDualSword, weaponGun;
     private CharacterController playerCtrl;
     private Animator anim;
     private UnitInfoBase playerInfo = new UnitInfoBase();
     private bool isKeepDrag, isJoystickChange;
     private Vector3 lastJoystickPos;
     private bool isAttackStart, isClickAttackB;
+    private bool haveRange, haveGun;
+
 
     public FightPlayer()
     {
         playerInfo.nowHp = playerInfo.maxHp = 200f;
         playerInfo.attackDistance = 1.5f;
         playerInfo.moveSpeed = 4;
+        playerInfo.attackDamage = 100f;
     }
 
     private void Awake()
     {
         playerCtrl = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        var weapons = transform.GetComponentsInChildren<WeaponBase>(true);
+        foreach(var item in weapons)
+        {
+            if(item.name== "WeaponSingleSword")
+            {
+                weaponSingleSword = item;
+            }
+            else if (item.name == "WeaponDualSword")
+            {
+                weaponDualSword = item;
+            }
+            else if (item.name == "WeaponGun")
+            {
+                weaponGun = item;
+            }
+        }
+    }
+
+    private void Start()
+    {
+        weaponDualSword.Toggle();
+        weaponGun.Toggle();
+        FightUIManager.Instance.SetRangeAttack(haveRange);
+        FightUIManager.Instance.SetGunAttack(haveGun);
     }
 
     private void Update()
     {
         JoystickMove();
-
     }
 
     #region Joystick and Move
@@ -144,7 +171,12 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void PlayRangeAttackButton()
     {
-        anim.SetTrigger("attackRange");
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerStand"
+                || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerRun")
+        {
+            anim.SetTrigger("attackRange");
+            UseRangeItem();
+        }
     }
 
     public void AttackTakeDamage_A()
@@ -185,11 +217,11 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         foreach (var target in enemyList)
         {
             Vector3 temVec = target.transform.position - transform.position;
-            Vector3 norVec = transform.rotation * Vector3.forward * 5;//此处*5只是为了画线更清楚,可以不要
+            Vector3 norVec = transform.rotation * Vector3.forward;//此处*5只是为了画线更清楚,可以不要
             float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
             if (angle <= 45)
             {
-                target.GetComponent<EnemyBase>().TakeDamage(playerInfo.attackDamage * 0.6f);
+                target.GetComponent<EnemyBase>().TakeDamage(playerInfo.attackDamage * 1.5f);
             }
         }
     }
@@ -199,6 +231,58 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     }
     #endregion
+
+    public bool GetRangeItem()
+    {
+        if (haveRange)
+        {
+            return false;
+        }
+        haveRange = true;
+        FightUIManager.Instance.SetRangeAttack(haveRange);
+        return true;
+    }
+
+    public bool UseRangeItem()
+    {
+        if (!haveRange)
+        {
+            return false;
+        }
+        else
+        {
+            haveRange = false;
+            weaponDualSword.Toggle();
+            FightUIManager.Instance.SetRangeAttack(haveRange);
+            return true;
+        }
+    }
+
+    public bool GetGunItem()
+    {
+        if (haveGun)
+        {
+            return false;
+        }
+        haveGun = true;
+        FightUIManager.Instance.SetGunAttack(haveGun);
+        return true;
+    }
+
+    public bool UseGunItem()
+    {
+        if (!haveGun)
+        {
+            return false;
+        }
+        else
+        {
+            haveGun = false;
+            weaponGun.Toggle();
+            FightUIManager.Instance.SetGunAttack(haveGun);
+            return true;
+        }
+    }
 
     public bool TakeDamage(float damage)
     {
