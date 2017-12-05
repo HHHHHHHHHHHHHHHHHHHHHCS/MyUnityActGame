@@ -7,7 +7,8 @@ public class FightPickItem : MonoBehaviour
     public enum PickItemType
     {
         dualSword,
-        gun
+        gun,
+        hp
     }
 
     [SerializeField]
@@ -26,6 +27,9 @@ public class FightPickItem : MonoBehaviour
                     break;
                 case PickItemType.gun:
                     haveItem = player.GetGunItem();
+                    break;
+                case PickItemType.hp:
+                    haveItem = player.GetHPItem();
                     break;
                 default:
                     break;

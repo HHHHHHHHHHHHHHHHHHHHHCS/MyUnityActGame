@@ -15,7 +15,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
     private bool isKeepDrag, isJoystickChange;
     private Vector3 lastJoystickPos;
     private bool isAttackStart, isClickAttackB;
-    private bool haveRange, haveGun = true;
+    private bool haveRange, haveGun ;
     private Transform gunSpawnPoint;
 
 
@@ -254,12 +254,13 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
         Vector3 rot = gunBullet.transform.eulerAngles;
         rot.y = transform.eulerAngles.y + 90;
-        Instantiate(gunBullet, gunSpawnPoint.position, Quaternion.Euler(rot));
+        var bullet = Instantiate(gunBullet, gunSpawnPoint.position, Quaternion.Euler(rot));
+        Destroy(bullet, 3f);
     }
 
-    public void AttackGunTakeDamage()
+    public void AttackGunTakeDamage(EnemyBase enemy)
     {
-
+        enemy.TakeDamage(playerInfo.attackDamage * 1.5f);
     }
 
     public void AttackGunEnd()
@@ -324,6 +325,21 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
     }
 
+    public bool GetHPItem()
+    {
+        if(playerInfo.nowHp>0)
+        {
+            playerInfo.nowHp += playerInfo.maxHp * 0.1f;
+            if(playerInfo.nowHp>playerInfo.maxHp)
+            {
+                playerInfo.nowHp = playerInfo.maxHp;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    #endregion
     public bool TakeDamage(float damage)
     {
         playerInfo.nowHp -= damage;
@@ -335,7 +351,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
         return false;
     }
-    #endregion
+
     public void Dead()
     {
         Debug.Log("I AM DEAD");

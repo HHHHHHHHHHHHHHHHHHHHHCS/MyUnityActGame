@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 {
-    protected static GameObject gunItem, dualSwordItem;
+    protected static GameObject gunItem, dualSwordItem, hpItem;
     protected Animator anim;
     protected CharacterController enemyCtrl;
     protected Transform player;
@@ -139,16 +139,24 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
         {
             dualSwordItem = Resources.Load<GameObject>("Prefabs/DualSwordItem");
         }
+        if (!hpItem)
+        {
+            hpItem = Resources.Load<GameObject>("Prefabs/HPItem");
+        }
 
         GameObject go = null;
         float rd = UnityEngine.Random.Range(0, 1f);
-        if (rd < 0.33f)
+        if (rd < 0.25f)
         {
             go = gunItem;
         }
-        else if (rd < 0.66f)
+        else if (rd < 0.5f)
         {
             go = dualSwordItem;
+        }
+        else if (rd < 0.75f)
+        {
+            go = hpItem;
         }
 
         if (go != null)
