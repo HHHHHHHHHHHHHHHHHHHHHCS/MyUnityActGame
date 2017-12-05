@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 {
+    private static GameObject gunBullet;
+
     private WeaponBase weaponSingleSword, weaponDualSword, weaponGun;
     private CharacterController playerCtrl;
     private Animator anim;
@@ -13,7 +15,8 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
     private bool isKeepDrag, isJoystickChange;
     private Vector3 lastJoystickPos;
     private bool isAttackStart, isClickAttackB;
-    private bool haveRange, haveGun;
+    private bool haveRange, haveGun = true;
+    private Transform gunSpawnPoint;
 
 
     public FightPlayer()
@@ -29,9 +32,9 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         playerCtrl = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         var weapons = transform.GetComponentsInChildren<WeaponBase>(true);
-        foreach(var item in weapons)
+        foreach (var item in weapons)
         {
-            if(item.name== "WeaponSingleSword")
+            if (item.name == "WeaponSingleSword")
             {
                 weaponSingleSword = item;
             }
@@ -42,6 +45,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
             else if (item.name == "WeaponGun")
             {
                 weaponGun = item;
+                gunSpawnPoint = weaponGun.transform.Find("BulletSpawnPosition");
             }
         }
     }
@@ -179,13 +183,23 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
     }
 
+    public void PlayGunAttackButton()
+    {
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerStand"
+                || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerRun")
+        {
+            anim.SetTrigger("attackGun");
+            UseGunItem();
+        }
+    }
+
     public void AttackTakeDamage_A()
     {
         Collider[] enemyList = Physics.OverlapSphere(transform.position, playerInfo.attackDistance, LayerMask.GetMask(Tags.enemy));
         foreach (var target in enemyList)
         {
             Vector3 temVec = target.transform.position - transform.position;
-            Vector3 norVec = transform.rotation * Vector3.forward ;//此处*5只是为了画线更清楚,可以不要
+            Vector3 norVec = transform.rotation * Vector3.forward;//此处*5只是为了画线更清楚,可以不要
             float angle = Mathf.Acos(Vector3.Dot(norVec.normalized, temVec.normalized)) * Mathf.Rad2Deg;//计算两个向量间的夹角
             if (angle <= 45)
             {
@@ -226,12 +240,36 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
     }
 
+    public void AttackRangeEnd()
+    {
+        weaponDualSword.Toggle();
+        weaponSingleSword.Toggle();
+    }
+
     public void AttackGun()
+    {
+        if (!gunBullet)
+        {
+            gunBullet = Resources.Load<GameObject>("Prefabs/GunBullet");
+        }
+        Vector3 rot = gunBullet.transform.eulerAngles;
+        rot.y = transform.eulerAngles.y + 90;
+        Instantiate(gunBullet, gunSpawnPoint.position, Quaternion.Euler(rot));
+    }
+
+    public void AttackGunTakeDamage()
     {
 
     }
+
+    public void AttackGunEnd()
+    {
+        weaponGun.Toggle();
+        weaponSingleSword.Toggle();
+    }
     #endregion
 
+    #region Item
     public bool GetRangeItem()
     {
         if (haveRange)
@@ -252,6 +290,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         else
         {
             haveRange = false;
+            weaponSingleSword.Toggle();
             weaponDualSword.Toggle();
             FightUIManager.Instance.SetRangeAttack(haveRange);
             return true;
@@ -278,6 +317,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         else
         {
             haveGun = false;
+            weaponSingleSword.Toggle();
             weaponGun.Toggle();
             FightUIManager.Instance.SetGunAttack(haveGun);
             return true;
@@ -295,7 +335,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         }
         return false;
     }
-
+    #endregion
     public void Dead()
     {
         Debug.Log("I AM DEAD");

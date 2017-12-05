@@ -45,10 +45,11 @@ public class FightUIManager : MonoBehaviour
         return this;
     }
 
-    public FightUIManager InitAttackButton(UnityAction normalEvent, UnityAction rangeEvent)
+    public FightUIManager InitAttackButton(UnityAction normalEvent, UnityAction rangeEvent,UnityAction gunEvent)
     {
         normalAttack.onClick.AddListener(normalEvent);
         rangeAttack.onClick.AddListener(rangeEvent);
+        gunAttack.onClick.AddListener(gunEvent);
         return this;
     }
 

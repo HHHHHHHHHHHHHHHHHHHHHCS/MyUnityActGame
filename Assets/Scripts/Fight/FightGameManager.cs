@@ -34,7 +34,7 @@ public class FightGameManager : MonoBehaviour
     {
         FightUIManager.Instance
             .InitJoystick(Player.JoystickBeginEvent, Player.JoystickDragEvent, Player.JoystickEndEvent)
-            .InitAttackButton(Player.PlayNormalAttackButton, Player.PlayRangeAttackButton);
+            .InitAttackButton(Player.PlayNormalAttackButton, Player.PlayRangeAttackButton,Player.PlayGunAttackButton);
 
     }
 

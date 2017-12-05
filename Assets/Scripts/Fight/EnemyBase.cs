@@ -110,28 +110,9 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 
     public virtual void Dead()
     {
-        if(!gunItem)
-        {
-            gunItem = Resources.Load<GameObject>("Prefabs/GunItem");
-        }
-        if (!dualSwordItem)
-        {
-            dualSwordItem = Resources.Load<GameObject>("Prefabs/DualSwordItem");
-        }
-
-        float rd = UnityEngine.Random.Range(0,1f);
-        if(rd<0.33f)
-        {
-            Instantiate(gunItem,transform.position
-                ,Quaternion.identity);
-        }
-        else if(rd <0.66f)
-        {
-            Instantiate(dualSwordItem, transform.position
-                ,Quaternion.identity);
-        }
-
+        SpawnDeadItem();
         anim.SetTrigger("death");
+        enemyCtrl.enabled = false;
         StartCoroutine(DeadAnim());
     }
 
@@ -145,5 +126,37 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
             transform.position += offestY;
             yield return wait;
         }
+        Destroy(gameObject);
+    }
+
+    protected virtual void SpawnDeadItem()
+    {
+        if (!gunItem)
+        {
+            gunItem = Resources.Load<GameObject>("Prefabs/GunItem");
+        }
+        if (!dualSwordItem)
+        {
+            dualSwordItem = Resources.Load<GameObject>("Prefabs/DualSwordItem");
+        }
+
+        GameObject go = null;
+        float rd = UnityEngine.Random.Range(0, 1f);
+        if (rd < 0.33f)
+        {
+            go = gunItem;
+        }
+        else if (rd < 0.66f)
+        {
+            go = dualSwordItem;
+        }
+
+        if (go != null)
+        {
+            Vector3 pos = transform.position;
+            pos.y = go.transform.position.y;
+            Instantiate(go, pos, Quaternion.identity);
+        }
+
     }
 }
