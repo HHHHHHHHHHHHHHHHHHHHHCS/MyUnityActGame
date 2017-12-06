@@ -10,6 +10,7 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
     protected CharacterController enemyCtrl;
     protected Transform player;
     protected UnitInfoBase unitInfo = new UnitInfoBase();
+    protected EnemyIcon icon;
 
     protected float sqr_attackDistance;
     protected float attackTimer;
@@ -27,7 +28,7 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
         enemyCtrl = GetComponent<CharacterController>();
         player = FightGameManager.Instance.Player.transform;
         sqr_attackDistance = unitInfo.attackDistance * unitInfo.attackDistance;
-        FightUIManager.Instance.MiniMap.AddIcon(this);
+        icon = FightUIManager.Instance.MiniMap.AddIcon(this);
     }
 
     protected virtual void Update()
@@ -41,7 +42,6 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
 
         if (unitInfo.nowHp > 0)
         {
-
             bool isRun = GetIsRun();
             Vector3 targetPos = player.position;
             targetPos.y = transform.position.y;
@@ -114,6 +114,7 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
         SpawnDeadItem();
         anim.SetTrigger("death");
         enemyCtrl.enabled = false;
+        icon.DestroySelf();
         StartCoroutine(DeadAnim());
     }
 

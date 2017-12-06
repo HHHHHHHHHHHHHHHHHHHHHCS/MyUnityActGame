@@ -32,7 +32,7 @@ public class FightGameManager : MonoBehaviour
 
     private void Update()
     {
-        FightUIManager.Instance.UpdateMiniMap();
+        FightUIManager.Instance.MiniMap.UpdateMiniMap();
     }
 
     private void InitFightUI()

@@ -21,20 +21,26 @@ public class FightMiniMap : MonoBehaviour
         playerIcon = transform.Find(FightName.playerIcon);
     }
 
-    public void AddIcon(EnemyBase enemy)
+    public EnemyIcon AddIcon(EnemyBase enemy)
     {
+        EnemyIcon go = null;
         if (enemy is SoulBoss)
         {
-            Debug.Log(1);
-            var a = Instantiate(bossIconPrefab, transform);
-            a.Init(player, enemy.transform);
+            go = bossIconPrefab;
         }
         else if (enemy is SoulMonster)
         {
-            Debug.Log(2);
-            var a =Instantiate(monsterIconPrefab, transform);
-            a.Init(player, enemy.transform);
+            go = monsterIconPrefab;
         }
+
+        if(go)
+        {
+            var icon = Instantiate(go, transform);
+            icon.Init(player, enemy.transform);
+            enemyIconList.Add(icon);
+            return icon;
+        }
+        return null;
     }
 
     public void UpdateMiniMap()
@@ -42,9 +48,17 @@ public class FightMiniMap : MonoBehaviour
         var angle = playerIcon.rotation.eulerAngles;
         angle.z = -player.eulerAngles.y;
         playerIcon.eulerAngles = angle;
-        foreach (var item in enemyIconList)
+        for (int i = enemyIconList.Count - 1; i >= 0; i--)
         {
-            item.UpdateIcon();
+            var item = enemyIconList[i];
+            if (item)
+            {
+                item.UpdateIcon();
+            }
+            else
+            {
+                enemyIconList.Remove(item);
+            }
         }
     }
 }

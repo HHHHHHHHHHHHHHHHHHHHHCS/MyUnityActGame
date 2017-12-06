@@ -72,11 +72,6 @@ public class FightUIManager : MonoBehaviour
         gunAttack.interactable = tf;
     }
 
-    public void UpdateMiniMap()
-    {
-        MiniMap.UpdateMiniMap();
-    }
-
     private void OnDestroy()
     {
         _instance = null;
