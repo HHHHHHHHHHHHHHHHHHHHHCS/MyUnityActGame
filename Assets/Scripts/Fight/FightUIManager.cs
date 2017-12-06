@@ -21,8 +21,15 @@ public class FightUIManager : MonoBehaviour
         }
     }
 
+    public FightMiniMap MiniMap
+    {
+        get;
+        private set;
+    }
+
     private JoystickEvent joystick;
-    private Button normalAttack, rangeAttack,gunAttack;
+    private Button normalAttack, rangeAttack, gunAttack;
+
 
     public FightUIManager _InitFightUI()
     {
@@ -33,6 +40,8 @@ public class FightUIManager : MonoBehaviour
             normalAttack = uiRoot.Find(FightName.normalAttack).GetComponent<Button>();
             rangeAttack = uiRoot.Find(FightName.rangeAttack).GetComponent<Button>();
             gunAttack = uiRoot.Find(FightName.gunAttack).GetComponent<Button>();
+            MiniMap = uiRoot.Find(FightName.miniMap).GetComponent<FightMiniMap>();
+            MiniMap._Init();
         }
         return this;
     }
@@ -45,7 +54,7 @@ public class FightUIManager : MonoBehaviour
         return this;
     }
 
-    public FightUIManager InitAttackButton(UnityAction normalEvent, UnityAction rangeEvent,UnityAction gunEvent)
+    public FightUIManager InitAttackButton(UnityAction normalEvent, UnityAction rangeEvent, UnityAction gunEvent)
     {
         normalAttack.onClick.AddListener(normalEvent);
         rangeAttack.onClick.AddListener(rangeEvent);
@@ -61,5 +70,15 @@ public class FightUIManager : MonoBehaviour
     public void SetGunAttack(bool tf)
     {
         gunAttack.interactable = tf;
+    }
+
+    public void UpdateMiniMap()
+    {
+        MiniMap.UpdateMiniMap();
+    }
+
+    private void OnDestroy()
+    {
+        _instance = null;
     }
 }

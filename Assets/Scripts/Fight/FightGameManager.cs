@@ -30,7 +30,12 @@ public class FightGameManager : MonoBehaviour
         InitFightUI();
     }
 
-    void InitFightUI()
+    private void Update()
+    {
+        FightUIManager.Instance.UpdateMiniMap();
+    }
+
+    private void InitFightUI()
     {
         FightUIManager.Instance
             .InitJoystick(Player.JoystickBeginEvent, Player.JoystickDragEvent, Player.JoystickEndEvent)
@@ -39,4 +44,8 @@ public class FightGameManager : MonoBehaviour
     }
 
 
+    private void OnDestroy()
+    {
+        Instance = null;
+    }
 }

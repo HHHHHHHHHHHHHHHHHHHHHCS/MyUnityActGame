@@ -8,4 +8,8 @@
     public const string normalAttack = attackButtons + "/NormalAttack";
     public const string rangeAttack = attackButtons + "/RangeAttack";
     public const string gunAttack = attackButtons + "/GunAttack";
+
+    public const string miniMap = "MiniMap";
+
+    public const string playerIcon = "PlayerIcon";
 }

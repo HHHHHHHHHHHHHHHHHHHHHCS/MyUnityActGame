@@ -27,6 +27,7 @@ public class EnemyBase : MonoBehaviour, IUnitBaseEvent
         enemyCtrl = GetComponent<CharacterController>();
         player = FightGameManager.Instance.Player.transform;
         sqr_attackDistance = unitInfo.attackDistance * unitInfo.attackDistance;
+        FightUIManager.Instance.MiniMap.AddIcon(this);
     }
 
     protected virtual void Update()
