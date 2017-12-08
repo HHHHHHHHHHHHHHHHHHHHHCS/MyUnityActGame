@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SoulBoss : EnemyBase
 {
+    [SerializeField]
+    private AudioClip attackAudio,deadAudio;
     protected static GameObject hitFX;
 
     public SoulBoss()
@@ -26,6 +28,7 @@ public class SoulBoss : EnemyBase
 
     protected override void Attack()
     {
+        AudioSource.PlayClipAtPoint(attackAudio, transform.position);
         int num = Random.Range(0, 2);
         if (num == 0)
         {
@@ -73,6 +76,7 @@ public class SoulBoss : EnemyBase
 
     public override bool TakeDamage(float damage)
     {
+
         var tf = base.TakeDamage(damage);
         if(tf)
         {
@@ -83,6 +87,7 @@ public class SoulBoss : EnemyBase
 
     public override void Dead()
     {
+        AudioSource.PlayClipAtPoint(deadAudio, transform.position);
         base.Dead();
     }
 

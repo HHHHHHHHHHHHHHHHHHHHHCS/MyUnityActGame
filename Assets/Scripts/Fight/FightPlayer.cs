@@ -8,6 +8,9 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 {
     private static GameObject gunBullet;
 
+    [SerializeField]
+    private AudioClip gunAudio, dualSwordAudio;
+
     private WeaponBase weaponSingleSword, weaponDualSword, weaponGun;
     private CharacterController playerCtrl;
     private Animator anim;
@@ -15,8 +18,9 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
     private bool isKeepDrag, isJoystickChange;
     private Vector3 lastJoystickPos;
     private bool isAttackStart, isClickAttackB;
-    private bool haveRange, haveGun ;
+    private bool haveRange, haveGun;
     private Transform gunSpawnPoint;
+    private bool isDead;
 
 
     public FightPlayer()
@@ -24,7 +28,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
         playerInfo.nowHp = playerInfo.maxHp = 200f;
         playerInfo.attackDistance = 1.5f;
         playerInfo.moveSpeed = 4;
-        playerInfo.attackDamage = 100f;
+        playerInfo.attackDamage = 20f;
     }
 
     private void Awake()
@@ -66,6 +70,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
     #region Joystick and Move
     private void JoystickMove()
     {
+        if (isDead) return;
         if (isKeepDrag)
         {
             if (!isJoystickChange)
@@ -154,6 +159,7 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void PlayNormalAttackButton()
     {
+        if (isDead) return;
         if (isAttackStart)
         {
             if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerAttackA")
@@ -175,6 +181,8 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void PlayRangeAttackButton()
     {
+        if (isDead) return;
+        AudioSource.PlayClipAtPoint(dualSwordAudio, transform.position);
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerStand"
                 || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerRun")
         {
@@ -185,6 +193,8 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public void PlayGunAttackButton()
     {
+        if (isDead) return;
+        AudioSource.PlayClipAtPoint(gunAudio, transform.position);
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerStand"
                 || anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "PlayerRun")
         {
@@ -327,10 +337,10 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
 
     public bool GetHPItem()
     {
-        if(playerInfo.nowHp>0)
+        if (playerInfo.nowHp > 0)
         {
             playerInfo.nowHp += playerInfo.maxHp * 0.1f;
-            if(playerInfo.nowHp>playerInfo.maxHp)
+            if (playerInfo.nowHp > playerInfo.maxHp)
             {
                 playerInfo.nowHp = playerInfo.maxHp;
             }
@@ -342,18 +352,23 @@ public class FightPlayer : MonoBehaviour, IUnitBaseEvent
     #endregion
     public bool TakeDamage(float damage)
     {
-        playerInfo.nowHp -= damage;
-        if (playerInfo.nowHp <= 0)
+        if(damage>0)
         {
-            playerInfo.nowHp = 0;
-            Dead();
-            return true;
+            playerInfo.nowHp -= damage;
+            if (playerInfo.nowHp <= 0)
+            {
+                playerInfo.nowHp = 0;
+                Dead();
+                return true;
+            }
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void Dead()
     {
-        Debug.Log("I AM DEAD");
+        isDead = true;
+        FightGameManager.Instance.FailGame();
     }
 }

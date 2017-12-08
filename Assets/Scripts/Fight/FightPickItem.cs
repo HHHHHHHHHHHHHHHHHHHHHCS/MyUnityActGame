@@ -13,6 +13,8 @@ public class FightPickItem : MonoBehaviour
 
     [SerializeField]
     private PickItemType itemType;
+    [SerializeField]
+    private AudioClip pickAudio;
 
     public void OnTriggerEnter(Collider other)
     {
@@ -36,6 +38,7 @@ public class FightPickItem : MonoBehaviour
             }
             if (haveItem)
             {
+                AudioSource.PlayClipAtPoint(pickAudio, transform.position);
                 Destroy(gameObject);
             }
         }

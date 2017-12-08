@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SoulMonster : EnemyBase
 {
+    [SerializeField]
+    private AudioClip deadAudio;
     protected static GameObject hitFX;
 
 
@@ -58,6 +60,7 @@ public class SoulMonster : EnemyBase
 
     public override void Dead()
     {
+        AudioSource.PlayClipAtPoint(deadAudio, transform.position);
         base.Dead();
     }
 

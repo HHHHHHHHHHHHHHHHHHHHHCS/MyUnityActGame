@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: 0
+  pickAudio: {fileID: 8300000, guid: f9f2307a9a7071849a80b1635bd8ea73, type: 3}
 --- !u!135 &135427576852823942
 SphereCollider:
   m_ObjectHideFlags: 1

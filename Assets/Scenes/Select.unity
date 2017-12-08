@@ -761,6 +761,47 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 564057362}
+--- !u!1 &670981015 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1321684692317730, guid: 74a73e3d888473e49aee80bfecaba361,
+    type: 2}
+  m_PrefabInternal: {fileID: 899868570}
+--- !u!114 &670981018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 670981015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013979b4b837f8249881d6c60e819667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headRenderer: {fileID: 1636288121}
+  handRenderer: {fileID: 1636288120}
+  footRenderer: {fileID: 1636288119}
+  upperbodyRenderer: {fileID: 1636288123}
+  lowerbodyRenderer: {fileID: 1636288122}
+  headMeshArray:
+  - {fileID: 4300006, guid: 6aafdff4192f96a408ec84fd37b50706, type: 3}
+  - {fileID: 4300004, guid: 0c5667fd59519a641b836b300d79f04b, type: 3}
+  - {fileID: 4300004, guid: bd2a804333b73f9429e247e5d15ee513, type: 3}
+  handMeshArray:
+  - {fileID: 4300008, guid: 9892870b3a52e254b86a9345580c68fe, type: 3}
+  - {fileID: 4300004, guid: 61ff7a880cc64864d9a404e48c0da3dc, type: 3}
+  - {fileID: 4300004, guid: 432ed186822f051479745e3c5bb1b8a5, type: 3}
+  footMeshArray:
+  - {fileID: 4300010, guid: 9892870b3a52e254b86a9345580c68fe, type: 3}
+  - {fileID: 4300004, guid: ed4a1c8d29b4ad241aefd63d3a8dac86, type: 3}
+  - {fileID: 4300004, guid: 4c8b6537c70895d44a932d6dff549284, type: 3}
+  upperbodyMeshArray:
+  - {fileID: 4300012, guid: 9892870b3a52e254b86a9345580c68fe, type: 3}
+  - {fileID: 4300004, guid: ed59251ab2ca35642bcbe7508430a83b, type: 3}
+  - {fileID: 4300004, guid: e2eb0eb7bd4aabb47845482e311a275f, type: 3}
+  lowerbodyMeshArray:
+  - {fileID: 4300004, guid: 9892870b3a52e254b86a9345580c68fe, type: 3}
+  - {fileID: 4300004, guid: 9bfd5a1fa434dbe4794ea177113ca1cb, type: 3}
+  - {fileID: 4300004, guid: 22f7bd202e5bb1f4f9cf72fd46b7b65d, type: 3}
 --- !u!1001 &899868570
 Prefab:
   m_ObjectHideFlags: 0

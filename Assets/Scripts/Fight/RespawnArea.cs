@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RespawnArea : MonoBehaviour
 {
+    public event Action RespawnEnd;
     [SerializeField]
     private float startSpawnTime = 5f;
 
@@ -35,6 +37,10 @@ public class RespawnArea : MonoBehaviour
             respawnArray[nowIndex].endSpawn += NextSpawn;
             respawnArray[nowIndex].Spawn();
             nowIndex++;
+            if(nowIndex >= respawnArray.Length)
+            {
+                RespawnEnd();
+            }
         }
     }
 }

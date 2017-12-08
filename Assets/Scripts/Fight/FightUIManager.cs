@@ -62,6 +62,11 @@ public class FightUIManager : MonoBehaviour
         return this;
     }
 
+    public void Update()
+    {
+        MiniMap.UpdateMiniMap();
+    }
+
     public void SetRangeAttack(bool tf)
     {
         rangeAttack.interactable = tf;
